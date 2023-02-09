@@ -7,6 +7,6 @@ fn main() {
     let file = args.get(1).unwrap();
     let input = fs::read_to_string(file).unwrap();
 
-    let solution = day2::get_total_sq_paper(input);
+    let solution = day2::get_ribbon_length(input);
     println!("Solution: {solution}");
 }
