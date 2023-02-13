@@ -11,7 +11,7 @@ use md5::{Md5, Digest};
 // If your secret key is abcdef, the answer is 609043, because the MD5 hash of abcdef609043 starts with five zeroes (000001dbbfa...), and it is the lowest such number to do so.
 // If your secret key is pqrstuv, the lowest number it combines with to make an MD5 hash starting with five zeroes is 1048970; that is, the MD5 hash of pqrstuv1048970 looks like 000006136ef....
 
-pub fn mine_advent_coin(input:String)->u32{
+pub fn mine_advent_coin(input:String, pattern:&str)->u32{
     let mut key = 1;
     loop {
         let data = format!("{}{}", input, key);
@@ -19,7 +19,7 @@ pub fn mine_advent_coin(input:String)->u32{
         hasher.update(data);
         let result = hasher.finalize();
         let out = hex::encode(result);
-        if out.starts_with("00000"){
+        if out.starts_with(pattern){
             return  key;
         }
         key += 1;
