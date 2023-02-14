@@ -7,6 +7,6 @@ fn main() {
     let file = args.get(1).unwrap();
     let input = fs::read_to_string(file).unwrap();
 
-    let solution = day5::get_nice_string_count(input);
+    let solution = day5::get_nice_string_count_v2(input);
     println!("Solution: {solution}");
 }
