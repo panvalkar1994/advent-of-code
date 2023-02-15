@@ -116,3 +116,66 @@ fn get_all_on_counts(state:&[[bool;1000];1000]) -> usize {
     }
     count
 }
+
+// --- Part Two ---
+// You just finish implementing your winning light pattern when you realize you mistranslated Santa's message from Ancient Nordic Elvish.
+
+// The light grid you bought actually has individual brightness controls; each light can have a brightness of zero or more. The lights all start at zero.
+
+// The phrase turn on actually means that you should increase the brightness of those lights by 1.
+
+// The phrase turn off actually means that you should decrease the brightness of those lights by 1, to a minimum of zero.
+
+// The phrase toggle actually means that you should increase the brightness of those lights by 2.
+
+// What is the total brightness of all lights combined after following Santa's instructions?
+
+// For example:
+
+// turn on 0,0 through 0,0 would increase the total brightness by 1.
+// toggle 0,0 through 999,999 would increase the total brightness by 2000000.
+pub fn get_all_lite_lights_v2(input:String)->usize{
+    let mut state: [[usize; 1000]; 1000] = [[0;1000];1000];
+    
+    for line in input.lines() {
+        let instruction:Instruction = parse_positions(line);
+        update_lights_by_instruction_v2(instruction, &mut state);
+    }
+    get_all_on_counts_v2(&state)
+}
+
+
+fn update_lights_by_instruction_v2(step:Instruction, state:&mut [[usize;1000];1000]) {
+    for i in step.start.x..=step.end.x{
+        for j in step.start.y..=step.end.y{
+            match step.op {
+                Operation::Toggle => {
+                    state[i][j] += 2;
+                },
+                Operation::Off => {
+                    if state[i][j] == 0 {
+                        state[i][j] = 0;
+                        
+                    }else{
+                        state[i][j] -= 1;
+                    }
+                },
+                Operation::On => {
+                    state[i][j] += 1;
+                }
+            }
+        }
+    }
+}
+
+
+
+fn get_all_on_counts_v2(state:&[[usize;1000];1000]) -> usize {
+    let mut count = 0;
+    for i in 0..1000{
+        for j in 0..1000{
+            count += state[i][j];
+        }
+    }
+    count
+}

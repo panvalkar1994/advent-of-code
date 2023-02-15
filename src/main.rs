@@ -7,6 +7,6 @@ fn main() {
     let file = args.get(1).unwrap();
     let input = fs::read_to_string(file).unwrap();
 
-    let solution = day6::get_all_lite_lights(input);
+    let solution = day6::get_all_lite_lights_v2(input);
     println!("Solution: {solution}");
 }
