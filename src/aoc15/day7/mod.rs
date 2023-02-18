@@ -53,11 +53,32 @@ pub fn get_circuit_input(input: String, wire: &str) -> usize {
             }
         }
     }
+    println!("{:#?}", map);
+    let b = map[wire];
+    let mut map: HashMap<&str, usize> = HashMap::new();
+    map.insert("b", b);
+    while map.contains_key(wire) == false {
+        for line in input.lines().clone() {
+            let v = line.split_ascii_whitespace().collect::<Vec<&str>>();
+            match v.len() {
+                // a -> b
+                3 => direct_set_signal(&v, &mut map),
+                // NOT a -> b
+                4 => not_operation(&v, &mut map),
+                // a AND b -> c
+                5 => two_arg_operation(&v, &mut map),
+                _ => {}
+            }
+        }
+    }
 
     map[wire]
 }
 
 fn direct_set_signal<'a>(v: &Vec<&'a str>,map: &mut HashMap<&'a str, usize>){
+    if v[2] == "b" && map.contains_key("b") == true {
+        return;
+    }
     match v[0].parse::<usize>() {
         Ok(num) => {
             map.insert(v[2], num);
@@ -71,6 +92,10 @@ fn direct_set_signal<'a>(v: &Vec<&'a str>,map: &mut HashMap<&'a str, usize>){
 }
 
 fn not_operation<'a>(v: &Vec<&'a str>, map: &mut HashMap<&'a str, usize>) {
+    if v[3] == "b" && map.contains_key("b") == true {
+        return;
+    }
+    
     match v[1].parse::<usize>() {
         Ok(num) => {
             map.insert(v[3], !num & 0xffff);
@@ -84,6 +109,9 @@ fn not_operation<'a>(v: &Vec<&'a str>, map: &mut HashMap<&'a str, usize>) {
 }
 
 fn two_arg_operation<'a>(v: &Vec<&'a str>, map: &mut HashMap<&'a str, usize>) {
+    if v[4] == "b" && map.contains_key("b") == true{
+        return;
+    }
     let a = match v[0].parse::<usize>() {
         Ok(num) => Some(num),
         Err(_) => match map.contains_key(v[0]) {
